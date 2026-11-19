@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check JavaScript syntax
+        run: |
+          set -e
+          files=$(git ls-files '*.js')
+          for f in $files; do
+            node --check "$f"
+            echo "ok  $f"
+          done
+      - name: Check JSON manifests
+        run: |
+          set -e
+          for f in $(git ls-files '*.json'); do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" && echo "ok  $f"
+          done
+      - name: Check HTML documents
+        run: |
+          set -e
+          for f in $(git ls-files '*.html'); do
+            test -s "$f" && echo "ok  $f"
+          done
+      - name: Assert no committed secrets
+        run: |
+          if git grep -nE '(BOT_TOKEN|API_KEY|PANEL_PASSWORD|SESSION_SECRET|WEBHOOK_SECRET)=[A-Za-z0-9]' -- . ':!*.example'; then
+            echo "::error::possible secret committed"; exit 1
+          fi
+          echo "no secrets found"

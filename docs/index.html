@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بتمن‌ای‌آی | مستندات فنی و رزومه پروژه</title>
+<meta name="description" content="مستندات فنی، معماری و رزومه پروژه bathmanai: پورتال، فروشگاه بلوپیپر، کلینیک مهر، کریپتودسک و ربات تلگرام — Node.js بدون وابستگی، Nginx، systemd، CDN و GitHub.">
+<meta name="theme-color" content="#070a12">
+<meta property="og:title" content="بتمن‌ای‌آی | مستندات فنی و رزومه پروژه">
+<meta property="og:description" content="۵ محصول، ۶ دامنه، ~۱۹ هزار خط کد بدون هیچ وابستگی npm — معماری، امنیت و فرآیند استقرار.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%237c5cff'/><text x='50' y='68' font-size='54' text-anchor='middle' fill='white' font-family='sans-serif'>B</text></svg>">
+<style>
+@font-face{font-family:'Vazirmatn';src:url('assets/fonts/Vazirmatn-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Vazirmatn';src:url('assets/fonts/Vazirmatn-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Vazirmatn';src:url('assets/fonts/Vazirmatn-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+
+:root{
+  --bg:#070a12; --bg-2:#0a0f1b; --surface:#0d1322; --surface-2:#121a2c;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16);
+  --text:#e9edf7; --muted:#9aa6c2; --dim:#6b7796;
+  --violet:#7c5cff; --cyan:#22d3ee; --amber:#f5a524; --green:#34d399; --pink:#f472b6;
+  --grad:linear-gradient(135deg,#7c5cff 0%,#22d3ee 100%);
+  --grad-soft:linear-gradient(135deg,rgba(124,92,255,.16),rgba(34,211,238,.12));
+  --shadow:0 24px 60px -30px rgba(0,0,0,.9);
+  --radius:20px; --radius-sm:14px; --maxw:1180px;
+}
+[data-theme="light"]{
+  --bg:#f6f7fb; --bg-2:#eef1f8; --surface:#ffffff; --surface-2:#f4f6fc;
+  --line:rgba(9,15,35,.10); --line-2:rgba(9,15,35,.18);
+  --text:#101528; --muted:#4d5876; --dim:#6b7796;
+  --grad-soft:linear-gradient(135deg,rgba(124,92,255,.12),rgba(34,211,238,.10));
+  --shadow:0 20px 50px -30px rgba(16,21,40,.35);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:'Vazirmatn',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.85;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(900px 520px at 82% -8%,rgba(124,92,255,.20),transparent 60%),
+    radial-gradient(760px 480px at 12% 4%,rgba(34,211,238,.13),transparent 62%),
+    radial-gradient(700px 600px at 50% 108%,rgba(245,165,36,.08),transparent 65%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(circle at 50% 0%,#000 0%,transparent 72%);
+  mask-image:radial-gradient(circle at 50% 0%,#000 0%,transparent 72%);
+}
+a{color:inherit;text-decoration:none}
+img,svg{max-width:100%}
+h1,h2,h3,h4{margin:0;line-height:1.45;font-weight:700}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+::selection{background:rgba(124,92,255,.35)}
+
+#progress{position:fixed;top:0;right:0;height:3px;width:0;background:var(--grad);z-index:120;box-shadow:0 0 14px rgba(124,92,255,.8)}
+.nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(18px);background:rgba(7,10,18,.78);border-bottom:1px solid var(--line)}
+[data-theme="light"] .nav{background:rgba(246,247,251,.82)}
+.nav-in{max-width:var(--maxw);margin:auto;padding:12px 22px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.02rem;white-space:nowrap}
+.brand-mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:#fff;background:var(--grad);box-shadow:0 8px 22px -8px rgba(124,92,255,.9);font-size:.95rem}
+.nav-links{display:flex;gap:2px;margin-inline-start:auto;flex-wrap:wrap}
+.nav-links a{font-size:.84rem;color:var(--muted);padding:7px 10px;border-radius:10px;transition:.2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:var(--surface-2)}
+.nav-links a.active{color:var(--text);background:var(--grad-soft);box-shadow:inset 0 0 0 1px var(--line-2)}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:.2s;font-size:1rem}
+.icon-btn:hover{border-color:var(--line-2);transform:translateY(-1px)}
+.burger{display:none}
+@media(max-width:980px){
+  .nav-links{position:fixed;inset:62px 12px auto 12px;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:var(--shadow);display:none}
+  .nav-links.open{display:flex}
+  .burger{display:grid}
+  .nav-links a{padding:10px 12px;font-size:.9rem}
+}
+
+.wrap{max-width:var(--maxw);margin:auto;padding:0 22px}
+section{padding:76px 0;position:relative;scroll-margin-top:70px}
+section+section{border-top:1px solid var(--line)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.77rem;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);padding:6px 13px;border-radius:999px;margin-bottom:16px}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--grad);display:block}
+.sec-head{max-width:780px;margin-bottom:34px}
+.sec-head h2{font-size:clamp(1.45rem,3.4vw,2.1rem);margin-bottom:10px}
+.sec-head h2 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-head p{color:var(--muted);font-size:.96rem}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:980px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+.card{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:transform .25s,border-color .25s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);border-color:var(--line-2)}
+.card h3{font-size:1.03rem;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+.card p{color:var(--muted);font-size:.91rem}
+.card .ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--grad-soft);border:1px solid var(--line-2);font-size:1.05rem;flex:none}
+.tag{display:inline-block;font-size:.73rem;padding:3px 9px;border-radius:8px;border:1px solid var(--line);color:var(--muted);background:var(--surface-2);margin:3px 0 0 4px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;padding:4px 10px;border-radius:999px;background:var(--grad-soft);border:1px solid var(--line-2);color:var(--text);margin:3px 0 0 4px}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* ---------- hero ---------- */
+.hero{padding:70px 0 46px;overflow:hidden}
+.hero-in{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+@media(max-width:980px){.hero-in{grid-template-columns:1fr;gap:28px}}
+.hero h1{font-size:clamp(1.9rem,5vw,3.05rem);line-height:1.35;margin:14px 0 16px}
+.hero h1 b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+.hero p.lead{color:var(--muted);font-size:1.02rem;max-width:600px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:13px;font-size:.9rem;font-weight:600;border:1px solid transparent;cursor:pointer;transition:.22s}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 16px 34px -18px rgba(124,92,255,.95)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 40px -18px rgba(124,92,255,.95)}
+.btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--text)}
+.btn-ghost:hover{transform:translateY(-2px);border-color:var(--violet)}
+.hero-visual{position:relative;aspect-ratio:1/1;display:grid;place-items:center}
+.orb{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55;animation:float 9s ease-in-out infinite}
+.orb.a{width:230px;height:230px;background:var(--violet);top:12%;right:8%}
+.orb.b{width:200px;height:200px;background:var(--cyan);bottom:10%;left:6%;animation-delay:-4s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.terminal{position:relative;width:100%;max-width:420px;background:#05080f;border:1px solid var(--line-2);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;direction:ltr}
+.terminal .bar{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+.terminal .bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57}
+.terminal .bar i:nth-child(2){background:#febc2e}
+.terminal .bar i:nth-child(3){background:#28c840}
+.terminal pre{margin:0;padding:16px;font-size:.74rem;line-height:1.75;color:#c8d3ea;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace}
+.terminal .k{color:#7c5cff}.terminal .s{color:#34d399}.terminal .c{color:#6b7796}.terminal .n{color:#22d3ee}
+
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:46px}
+@media(max-width:760px){.stats-strip{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:16px 18px;text-align:center}
+.stat b{display:block;font-size:1.55rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.3}
+.stat span{font-size:.78rem;color:var(--muted)}
+
+/* ---------- architecture ---------- */
+.arch{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.arch svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:.78rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:10px;height:10px;border-radius:3px;display:block}
+
+/* ---------- module cards ---------- */
+.mod{display:flex;flex-direction:column;gap:12px}
+.mod-top{display:flex;align-items:center;gap:12px}
+.mod-top .ic{width:44px;height:44px;font-size:1.2rem;border-radius:13px}
+.mod h3{margin:0;font-size:1.05rem}
+.mod .url{font-size:.76rem;color:var(--cyan);direction:ltr;text-align:right}
+.mod ul.feat{display:grid;gap:6px;margin-top:4px}
+.mod ul.feat li{position:relative;padding-inline-start:18px;font-size:.86rem;color:var(--muted)}
+.mod ul.feat li::before{content:"";position:absolute;inset-inline-start:0;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--grad)}
+.mod .foot{margin-top:auto;padding-top:12px;border-top:1px dashed var(--line)}
+
+/* ---------- stack ---------- */
+.stack-row{margin-bottom:18px}
+.stack-row header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.stack-row header b{font-size:.9rem}
+.stack-row header span{font-size:.78rem;color:var(--dim)}
+.bar{height:9px;border-radius:99px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--grad);width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.tech-group h4{font-size:.9rem;color:var(--muted);margin-bottom:10px;font-weight:600}
+.tech-group .tags{display:flex;flex-wrap:wrap;gap:7px}
+.tech-group .tags span{font-size:.78rem;padding:5px 11px;border-radius:9px;background:var(--surface-2);border:1px solid var(--line);color:var(--text)}
+
+/* ---------- flow / code ---------- */
+.flow{display:grid;gap:14px;counter-reset:step}
+.flow-step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:16px 18px}
+.flow-step::before{counter-increment:step;content:counter(step);flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--grad);color:#fff;font-size:.85rem;font-weight:700}
+.flow-step h4{font-size:.94rem;margin-bottom:3px}
+.flow-step p{font-size:.85rem;color:var(--muted)}
+.code{background:#05080f;border:1px solid var(--line-2);border-radius:14px;padding:16px;overflow:auto;direction:ltr;text-align:left;box-shadow:var(--shadow)}
+.code pre{margin:0;font-size:.78rem;line-height:1.9;color:#c8d3ea;font-family:ui-monospace,Menlo,Consolas,monospace}
+.code .c{color:#6b7796}.code .g{color:#34d399}.code .v{color:#7c5cff}.code .y{color:#f5a524}
+
+/* ---------- timeline ---------- */
+.tl{position:relative;padding-inline-start:26px}
+.tl::before{content:"";position:absolute;inset-inline-start:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--violet),var(--cyan),transparent)}
+.tl-item{position:relative;padding-bottom:22px}
+.tl-item::before{content:"";position:absolute;inset-inline-start:-25px;top:8px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--violet);box-shadow:0 0 0 4px rgba(124,92,255,.15)}
+.tl-item b{font-size:.95rem}
+.tl-item .when{font-size:.76rem;color:var(--cyan);margin-bottom:2px;direction:ltr;text-align:right}
+.tl-item p{font-size:.86rem;color:var(--muted)}
+
+/* ---------- contact ---------- */
+.contact-card{background:linear-gradient(135deg,rgba(124,92,255,.14),rgba(34,211,238,.08));border:1px solid var(--line-2);border-radius:var(--radius);padding:34px;text-align:center}
+.contact-card h2{font-size:clamp(1.4rem,3vw,1.9rem);margin-bottom:10px}
+.contact-card p{color:var(--muted);max-width:620px;margin:0 auto 22px}
+.links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+footer{padding:34px 0;border-top:1px solid var(--line);color:var(--dim);font-size:.82rem}
+footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+.to-top{position:fixed;inset-inline-end:20px;bottom:20px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line-2);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;opacity:0;pointer-events:none;transition:.25s;z-index:90;box-shadow:var(--shadow)}
+.to-top.show{opacity:1;pointer-events:auto}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;padding:3px 9px;border-radius:7px;background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+.badge.warn{background:rgba(245,165,36,.12);color:var(--amber);border-color:rgba(245,165,36,.3)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.86rem}
+.kv dt{color:var(--dim)}.kv dd{margin:0;color:var(--text)}
+
+@media print{
+  body::before,body::after,#progress,.nav,.to-top,.orb{display:none!important}
+  body{background:#fff;color:#111}
+  .card,.arch,.stat,.flow-step{box-shadow:none;border-color:#ddd;background:#fff;break-inside:avoid}
+  section{padding:22px 0;break-inside:avoid}
+  .reveal{opacity:1!important;transform:none!important}
+  .terminal{display:none}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a href="#top" class="brand"><span class="brand-mark">B</span> بتمن‌ای‌آی</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#about">درباره</a>
+      <a href="#architecture">معماری</a>
+      <a href="#modules">ماژول‌ها</a>
+      <a href="#stack">تکنولوژی‌ها</a>
+      <a href="#features">امکانات</a>
+      <a href="#security">امنیت</a>
+      <a href="#devops">استقرار</a>
+      <a href="#numbers">آمار کد</a>
+      <a href="#roadmap">نقشه راه</a>
+      <a href="#contact">ارتباط</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" title="تغییر تم" aria-label="تغییر تم">☀</button>
+      <button class="icon-btn burger" id="burger" aria-label="منو">☰</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-in">
+      <div>
+        <span class="eyebrow"><i></i> مستندات فنی و رزومه پروژه · نسخه ۱.۰</span>
+        <h1>یک اکوسیستم <b>پنج‌ماژولی</b> فارسی، بدون هیچ وابستگی npm</h1>
+        <p class="lead">
+          <b>bathmanai</b> مجموعه‌ای از پنج محصول مستقل است — پورتال معرفی خدمات، فروشگاه «بلوپیپر»،
+          سامانه نوبت‌دهی «کلینیک مهر»، میز کار معاملات «کریپتودسک» و ربات دانلودر تلگرام —
+          که روی یک سرور لینوکسی با <b>Nginx</b>، <b>systemd</b>، <b>TLS خودکار</b> و <b>CDN</b> اجرا می‌شوند
+          و کد همه‌شان در یک ریپوی GitHub نگه‌داری می‌شود.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://bathmanai.ir" target="_blank" rel="noopener">مشاهده سایت ↗</a>
+          <a class="btn btn-ghost" href="https://github.com/mamadmari/bathmanai" target="_blank" rel="noopener">مخزن گیت‌هاب</a>
+          <a class="btn btn-ghost" href="#architecture">معماری سیستم</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <span class="orb a"></span><span class="orb b"></span>
+        <div class="terminal">
+          <div class="bar"><i></i><i></i><i></i></div>
+<pre><span class="c"># استقرار یک‌مرحله‌ای روی سرور</span>
+<span class="v">$</span> git clone git@github.com:mamadmari/bathmanai.git
+<span class="v">$</span> cp deploy/nginx/bathmanai.conf \
+     /etc/nginx/sites-available/
+<span class="v">$</span> nginx -t <span class="s">&&</span> systemctl reload nginx
+<span class="v">$</span> systemctl enable --now clinic cryptodesk dlbot
+<span class="g">✔ nginx: configuration file test is successful</span>
+<span class="g">✔ clinic.service      active (8788)</span>
+<span class="g">✔ cryptodesk.service  active (8787)</span>
+<span class="g">✔ dlbot.service       active (8792)</span>
+<span class="n">→ https://bathmanai.ir  (TLS · CDN · 200 OK)</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-strip">
+      <div class="stat"><b data-count="5">۰</b><span>محصول مستقل</span></div>
+      <div class="stat"><b data-count="6">۰</b><span>دامنه و زیردامنه فعال</span></div>
+      <div class="stat"><b data-count="19255">۰</b><span>خط کد در مخزن</span></div>
+      <div class="stat"><b data-count="0">۰</b><span>وابستگی npm</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> درباره پروژه</span>
+      <h2>از یک صفحه فرود تا <span>پنج سرویس در حال اجرا</span></h2>
+      <p>
+        این پروژه با یک هدف ساده شروع شد: ساخت سرویس‌های فارسی که سریع باشند، روی سرور کم‌منبع
+        (۲ گیگ رم) بالا بیایند و نگه‌داری‌شان ساده بماند. نتیجه، مجموعه‌ای است که در آن هر ماژول
+        یک فرآیند Node.js مستقل با صفر وابستگی خارجی است و فقط از ماژول‌های داخلی Node استفاده می‌کند.
+      </p>
+    </div>
+    <div class="grid g3">
+      <div class="card reveal">
+        <h3><span class="ic">🎯</span> هدف</h3>
+        <p>
+          ساخت محصولات واقعی و قابل استفاده برای کاربر ایرانی: نوبت‌دهی پزشکی، فروشگاه،
+          ابزار تحلیل بازار و ربات دانلود — با تجربه‌ی موبایل‌فرست و راست‌به‌چپ.
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">🧩</span> رویکرد</h3>
+        <p>
+          «بدون وابستگی» به‌عنوان یک قاعده: هیچ پکیج npm، هیچ فریم‌ورک سنگین و هیچ سرویس
+          جانبی اجباری. فقط Node.js، استانداردهای وب و ابزارهای سیستمی لینوکس.
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">📈</span> نتیجه</h3>
+        <p>
+          پنج سرویس در حال اجرا روی یک سرور، شش دامنه با TLS معتبر، استقرار تک‌دستوری،
+          بکاپ‌گیری منظم و کد یکپارچه در GitHub — بدون هزینه‌ی زیرساخت اضافه.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="architecture">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> معماری سیستم</span>
+      <h2>مسیر یک درخواست، از <span>مرورگر تا دیتابیس</span></h2>
+      <p>
+        ترافیک کاربران ابتدا به لبه‌ی CDN می‌رسد و از آنجا به سرور مبدأ (آلمان) هدایت می‌شود.
+        Nginx بر اساس دامنه، درخواست را یا مستقیم از فایل‌های استاتیک سرو می‌کند یا به یکی از
+        سه سرویس Node.js روی پورت‌های محلی پروکسی می‌کند. هیچ پورتی جز ۸۰ و ۴۴۳ از بیرون باز نیست.
+      </p>
+    </div>
+
+    <div class="arch reveal">
+      <svg viewBox="0 0 1000 470" role="img" aria-label="نمودار معماری: کاربر، CDN، سرور، اپلیکیشن‌ها و ابزارها" style="font-family:inherit">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#7c5cff"/>
+          </marker>
+          <marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#34d399"/>
+          </marker>
+        </defs>
+
+        <rect x="760" y="24" width="210" height="60" rx="15" fill="rgba(34,211,238,.10)" stroke="rgba(34,211,238,.45)"/>
+        <text x="950" y="49" text-anchor="end" fill="#e9edf7" font-size="15" font-weight="600">کاربران · مرورگر · موبایل</text>
+        <text x="950" y="70" text-anchor="end" fill="#9aa6c2" font-size="12">HTTPS · IPv4/IPv6</text>
+
+        <rect x="470" y="24" width="240" height="60" rx="15" fill="rgba(245,165,36,.10)" stroke="rgba(245,165,36,.45)"/>
+        <text x="690" y="49" text-anchor="end" fill="#e9edf7" font-size="15" font-weight="600">لبه CDN — WCDN</text>
+        <text x="690" y="70" text-anchor="end" fill="#9aa6c2" font-size="12">TLS · کش · ضد حملات</text>
+        <line x1="758" y1="54" x2="716" y2="54" stroke="#7c5cff" stroke-width="1.8" marker-end="url(#ar)"/>
+
+        <rect x="40" y="112" width="930" height="236" rx="22" fill="rgba(124,92,255,.06)" stroke="rgba(124,92,255,.35)" stroke-dasharray="6 5"/>
+        <text x="948" y="140" text-anchor="end" fill="#c9d3ea" font-size="13" font-weight="600">سرور مبدأ · Ubuntu 26.04 · ۲ هسته · ۲GB RAM</text>
+        <line x1="590" y1="86" x2="500" y2="110" stroke="#7c5cff" stroke-width="1.8" marker-end="url(#ar)"/>
+
+        <rect x="430" y="152" width="140" height="176" rx="14" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)"/>
+        <text x="500" y="196" text-anchor="middle" fill="#e9edf7" font-size="15" font-weight="700">nginx</text>
+        <text x="500" y="220" text-anchor="middle" fill="#9aa6c2" font-size="11.5">۴ virtual host</text>
+        <text x="500" y="240" text-anchor="middle" fill="#9aa6c2" font-size="11.5">reverse proxy</text>
+        <text x="500" y="260" text-anchor="middle" fill="#9aa6c2" font-size="11.5">gzip · headers</text>
+        <text x="500" y="280" text-anchor="middle" fill="#9aa6c2" font-size="11.5">TLS 1.2 / 1.3</text>
+        <text x="500" y="300" text-anchor="middle" fill="#9aa6c2" font-size="11.5">:80 :443</text>
+
+        <rect x="60" y="152" width="342" height="176" rx="14" fill="rgba(52,211,153,.05)" stroke="rgba(52,211,153,.30)"/>
+        <text x="386" y="176" text-anchor="end" fill="#34d399" font-size="12.5" font-weight="600">سایت‌های استاتیک (فایل روی دیسک)</text>
+        <rect x="76" y="188" width="310" height="34" rx="9" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)"/>
+        <text x="372" y="210" text-anchor="end" fill="#e9edf7" font-size="12.5">bathmanai.ir — پورتال معرفی خدمات</text>
+        <rect x="76" y="228" width="310" height="34" rx="9" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)"/>
+        <text x="372" y="250" text-anchor="end" fill="#e9edf7" font-size="12.5">blupaper.bathmanai.ir — فروشگاه</text>
+        <rect x="76" y="268" width="310" height="34" rx="9" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)"/>
+        <text x="372" y="290" text-anchor="end" fill="#e9edf7" font-size="12.5">jpx — صفحه فرود مستقل</text>
+        <line x1="430" y1="240" x2="406" y2="240" stroke="#34d399" stroke-width="1.8" marker-end="url(#arg)"/>
+
+        <rect x="600" y="152" width="350" height="176" rx="14" fill="rgba(124,92,255,.07)" stroke="rgba(124,92,255,.32)"/>
+        <text x="936" y="176" text-anchor="end" fill="#a89bff" font-size="12.5" font-weight="600">سرویس‌های Node.js (systemd)</text>
+        <rect x="616" y="188" width="318" height="34" rx="9" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)"/>
+        <text x="922" y="210" text-anchor="end" fill="#e9edf7" font-size="12.5">clinic — نوبت‌دهی · :8788 · JSON</text>
+        <rect x="616" y="228" width="318" height="34" rx="9" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)"/>
+        <text x="922" y="250" text-anchor="end" fill="#e9edf7" font-size="12.5">cryptodesk — بازار · :8787 · REST</text>
+        <rect x="616" y="268" width="318" height="34" rx="9" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)"/>
+        <text x="922" y="290" text-anchor="end" fill="#e9edf7" font-size="12.5">dlbot — ربات دانلود · :8792 · SQLite</text>
+        <line x1="572" y1="240" x2="596" y2="240" stroke="#7c5cff" stroke-width="1.8" marker-end="url(#ar)"/>
+
+        <rect x="60" y="378" width="270" height="56" rx="13" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.16)"/>
+        <text x="318" y="402" text-anchor="end" fill="#e9edf7" font-size="13" font-weight="600">certbot · Let's Encrypt</text>
+        <text x="318" y="422" text-anchor="end" fill="#9aa6c2" font-size="11.5">تمدید خودکار گواهی</text>
+        <line x1="195" y1="376" x2="195" y2="352" stroke="#7c5cff" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+
+        <rect x="350" y="378" width="250" height="56" rx="13" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.16)"/>
+        <text x="588" y="402" text-anchor="end" fill="#e9edf7" font-size="13" font-weight="600">Telegram Bot API</text>
+        <text x="588" y="422" text-anchor="end" fill="#9aa6c2" font-size="11.5">polling · webhook</text>
+
+        <rect x="620" y="378" width="350" height="56" rx="13" fill="rgba(124,92,255,.10)" stroke="rgba(124,92,255,.40)"/>
+        <text x="958" y="402" text-anchor="end" fill="#e9edf7" font-size="13" font-weight="600">GitHub · مخزن monorepo</text>
+        <text x="958" y="422" text-anchor="end" fill="#9aa6c2" font-size="11.5">deploy key · main branch</text>
+        <line x1="795" y1="376" x2="795" y2="352" stroke="#7c5cff" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+      </svg>
+      <div class="legend">
+        <span><i style="background:#22d3ee"></i> مسیر کاربر</span>
+        <span><i style="background:#f5a524"></i> لبه شبکه (CDN)</span>
+        <span><i style="background:#7c5cff"></i> کد و استقرار</span>
+        <span><i style="background:#34d399"></i> فایل استاتیک</span>
+        <span><i style="background:#6b7796"></i> خط‌چین: ارتباط خارجی یا غیرهمزمان</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section id="modules">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> ماژول‌ها</span>
+      <h2>پنج محصول، پنج <span>مسئولیت مستقل</span></h2>
+      <p>هر ماژول یک فرآیند جدا با نسخه‌بندی و بکاپ مستقل است؛ خرابی یکی، بقیه را متوقف نمی‌کند.</p>
+    </div>
+    <div class="grid g2">
+
+      <article class="card mod reveal">
+        <div class="mod-top">
+          <span class="ic">🕸</span>
+          <div>
+            <h3>پورتال bathmanai</h3>
+            <div class="url">bathmanai.ir · www.bathmanai.ir</div>
+          </div>
+        </div>
+        <p>صفحه‌ی معرفی استودیو: «ساخت سایت، پنل و ربات». تک‌صفحه‌ای، موبایل‌فرست و بهینه برای سرعت.</p>
+        <ul class="feat">
+          <li>بخش‌های سرویس‌ها، نمونه‌کارها و فرم تماس</li>
+          <li>فونت متغیر Vazirmatn به‌صورت self-host</li>
+          <li>سئوی کامل: <code>sitemap.xml</code>، <code>robots.txt</code>، متاتگ‌های Open Graph</li>
+          <li>مسیر <code>/dlbot/</code> به‌عنوان پروکسی معکوس به ربات</li>
+          <li>هدرهای امنیتی و کش ۷ روزه برای دارایی‌های استاتیک</li>
+        </ul>
+        <div class="foot"><span class="tag">HTML5</span><span class="tag">CSS3</span><span class="tag">Vanilla JS</span><span class="tag">Nginx</span></div>
+      </article>
+
+      <article class="card mod reveal">
+        <div class="mod-top">
+          <span class="ic">🛍</span>
+          <div>
+            <h3>بلوپیپر</h3>
+            <div class="url">blupaper.bathmanai.ir</div>
+          </div>
+        </div>
+        <p>فروشگاه تخصصی «بگ بنددار و باکس چاپ اختصاصی» با تمرکز روی معرفی محصول و جذب سفارش.</p>
+        <ul class="feat">
+          <li>کاتالوگ محصول با جزئیات چاپ و ابعاد</li>
+          <li>طراحی راست‌به‌چپ و بهینه برای موبایل</li>
+          <li>مسیر مستقل با vhost و گواهی جداگانه (SAN مشترک)</li>
+          <li>لینک‌سازی داخلی از پورتال اصلی (<code>/shop</code>)</li>
+        </ul>
+        <div class="foot"><span class="tag">HTML5</span><span class="tag">CSS Grid</span><span class="tag">SEO</span></div>
+      </article>
+
+      <article class="card mod reveal">
+        <div class="mod-top">
+          <span class="ic">🩺</span>
+          <div>
+            <h3>کلینیک مهر — نوبت‌دهی</h3>
+            <div class="url">clinic.bathmanai.ir · :8788</div>
+          </div>
+        </div>
+        <p>سامانه نوبت‌دهی پزشکی با پنل بیمار و مدیر؛ ورود با موبایل و کد یک‌بارمصرف.</p>
+        <ul class="feat">
+          <li>احراز هویت با OTP و نشست مبتنی بر کوکی امن</li>
+          <li>جست‌وجوی پزشک بر اساس تخصص و نمایش زمان‌های آزاد</li>
+          <li>ثبت، مشاهده و لغو نوبت توسط بیمار</li>
+          <li>پنل مدیر: افزودن پزشک، آمار مراجعه و وضعیت نوبت‌ها</li>
+          <li>ذخیره‌سازی JSON با نوشتن اتمیک (بدون از دست رفتن داده)</li>
+        </ul>
+        <div class="foot">
+          <span class="chip">/api/auth/request</span><span class="chip">/api/auth/verify</span>
+          <span class="chip">/api/doctors</span><span class="chip">/api/slots</span>
+          <span class="chip">/api/appointments</span><span class="chip">/api/admin/stats</span>
+        </div>
+      </article>
+
+      <article class="card mod reveal">
+        <div class="mod-top">
+          <span class="ic">📈</span>
+          <div>
+            <h3>کریپتودسک</h3>
+            <div class="url">cryptodesk.bathmanai.ir · trade.bathmanai.ir · :8787</div>
+          </div>
+        </div>
+        <p>میز کار تحلیل و معامله‌ی کریپتو با نمودار زنده، تیکر و ماشین‌حساب سود/ضرر.</p>
+        <ul class="feat">
+          <li>نمودار کندل‌استیک سبک با Canvas و بدون کتابخانه</li>
+          <li>لیست بازارها، نمادها و قیمت‌های لحظه‌ای</li>
+          <li>ماشین‌حساب اندازه پوزیشن و مدیریت ریسک</li>
+          <li>لایه‌ی API با کش سمت سرور برای کاهش درخواست‌های خارجی</li>
+          <li>دو دامنه روی یک سرویس (برند و دامنه‌ی جایگزین)</li>
+        </ul>
+        <div class="foot">
+          <span class="chip">/api/markets</span><span class="chip">/api/tickers</span>
+          <span class="chip">/api/klines</span><span class="chip">/api/symbols</span>
+          <span class="chip">/api/global</span>
+        </div>
+      </article>
+
+      <article class="card mod reveal" style="grid-column:1/-1">
+        <div class="mod-top">
+          <span class="ic">🤖</span>
+          <div>
+            <h3>dlbot — ربات دانلودر تلگرام + پنل وب</h3>
+            <div class="url">bathmanai.ir/dlbot/ · :8792 · SQLite</div>
+          </div>
+        </div>
+        <p>
+          ربات عمومی دانلود از شبکه‌های اجتماعی همراه با پنل مدیریت وب: صف درخواست، محدودیت مصرف،
+          گالری فایل‌ها و پشتیبانی چندزبانه.
+        </p>
+        <div class="grid g2" style="margin-top:6px">
+          <ul class="feat">
+            <li>دانلود از یوتیوب، اینستاگرام، توییتر/X و صدها منبع دیگر با <code>yt-dlp</code></li>
+            <li>ادغام صدا و تصویر با <code>ffmpeg</code> و انتخاب کیفیت</li>
+            <li>صف نوبت‌دهی (API queue) برای جلوگیری از اشباع سرور</li>
+            <li>سیاست دسترسی: سهمیه روزانه، حجم و محدودیت کاربر</li>
+          </ul>
+          <ul class="feat">
+            <li>دیتابیس <code>node:sqlite</code> برای کاربران، فایل‌ها و لاگ‌ها</li>
+            <li>پنل وب با ورود رمز و مدیریت کاربران/فایل‌ها</li>
+            <li>ربات مدیریت جداگانه برای ادمین (adminbot)</li>
+            <li>چندزبانگی (i18n) فارسی/انگلیسی و حالت polling یا webhook</li>
+          </ul>
+        </div>
+        <div class="foot"><span class="tag">Node.js</span><span class="tag">node:sqlite</span><span class="tag">yt-dlp</span><span class="tag">ffmpeg</span><span class="tag">Telegram Bot API</span><span class="tag">systemd</span></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> تکنولوژی‌ها و زبان‌ها</span>
+      <h2>هرچه استفاده شده، با <span>سهم واقعی از کد</span></h2>
+      <p>
+        درصدها از شمارش خطوط کد همین مخزن محاسبه شده‌اند (مجموع ۱۹٬۲۵۵ خط).
+        هیچ کتابخانه‌ی شخص ثالثی در بک‌اند استفاده نشده است.
+      </p>
+    </div>
+
+    <div class="grid g2">
+      <div class="card reveal">
+        <h3><span class="ic">⌨</span> ترکیب زبان‌ها</h3>
+        <div class="stack-row"><header><b>JavaScript (Node.js + مرورگر)</b><span>11,405 خط · 59.2%</span></header><div class="bar"><i data-w="59"></i></div></div>
+        <div class="stack-row"><header><b>CSS3</b><span>4,256 خط · 22.1%</span></header><div class="bar"><i data-w="22"></i></div></div>
+        <div class="stack-row"><header><b>HTML5</b><span>1,569 خط · 8.1%</span></header><div class="bar"><i data-w="8"></i></div></div>
+        <div class="stack-row"><header><b>Nginx config</b><span>399 خط · 2.1%</span></header><div class="bar"><i data-w="4"></i></div></div>
+        <div class="stack-row" style="margin-bottom:0"><header><b>Bash · systemd · PowerShell · JSON · Markdown</b><span>~1,626 خط · 8.5%</span></header><div class="bar"><i data-w="9"></i></div></div>
+      </div>
+
+      <div class="card reveal tech-group">
+        <h3><span class="ic">🧱</span> پشته فنی</h3>
+        <h4>زبان و رانتایم</h4>
+        <div class="tags"><span>Node.js 22</span><span>JavaScript ES2022</span><span>HTML5</span><span>CSS3</span><span>SQL</span><span>Bash</span><span>PowerShell</span></div>
+        <h4 style="margin-top:14px">بک‌اند</h4>
+        <div class="tags"><span>http</span><span>fs / path / crypto</span><span>node:sqlite</span><span>REST API</span><span>Cookie Session</span><span>OTP</span></div>
+        <h4 style="margin-top:14px">فرانت‌اند</h4>
+        <div class="tags"><span>Vanilla JS</span><span>Fetch API</span><span>Canvas 2D</span><span>CSS Grid</span><span>Flexbox</span><span>Vazirmatn</span><span>RTL</span></div>
+        <h4 style="margin-top:14px">زیرساخت</h4>
+        <div class="tags"><span>Ubuntu 26.04</span><span>Nginx</span><span>systemd</span><span>certbot</span><span>Let's Encrypt</span><span>CDN</span><span>UFW</span></div>
+        <h4 style="margin-top:14px">توسعه و انتشار</h4>
+        <div class="tags"><span>Git</span><span>GitHub</span><span>Deploy Key</span><span>SSH</span><span>rsync</span><span>tar</span><span>curl</span></div>
+        <h4 style="margin-top:14px">یکپارچه‌سازی</h4>
+        <div class="tags"><span>Telegram Bot API</span><span>yt-dlp</span><span>ffmpeg</span><span>Market Data API</span></div>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:18px">
+      <div class="card reveal">
+        <h3><span class="ic">📦</span> چرا بدون وابستگی؟</h3>
+        <p>
+          حذف کامل <code>node_modules</code> یعنی نصب فوری، بدون ریسک زنجیره‌ی تأمین، بدون
+          آسیب‌پذیری پکیج‌های متروک و مصرف رم پایین‌تر روی سرور ۲ گیگی.
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">⚡</span> کارایی</h3>
+        <p>
+          همه‌ی سرویس‌ها زیر ۶۰ میلی‌ثانیه پاسخ می‌دهند، صفحات استاتیک با gzip و کش ۷ روزه،
+          و اپ‌ها با یک فرآیند Node بدون بار اضافه‌ی فریم‌ورک اجرا می‌شوند.
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">🌐</span> دسترس‌پذیری</h3>
+        <p>
+          طراحی راست‌به‌چپ بومی، فونت محلی (بدون CDN خارجی)، کنتراست مناسب و
+          پشتیبانی از <code>prefers-reduced-motion</code> در همین صفحه‌ی مستندات.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> امکانات و توانمندی‌ها</span>
+      <h2>آنچه در عمل <span>ساخته و اجرا شده</span></h2>
+      <p>فهرست کوتاه از قابلیت‌هایی که در همین مخزن کد دارند و روی سرور فعال‌اند.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card reveal"><h3>🔐 احراز هویت</h3><p>ورود با موبایل و کد یک‌بارمصرف، نشست کوکی <code>HttpOnly</code>، خروج و اعتبارسنجی هر درخواست.</p></div>
+      <div class="card reveal"><h3>🗓 نوبت‌دهی</h3><p>ظرفیت هر پزشک، تولید اسلات‌های آزاد، جلوگیری از رزرو تکراری و لغو نوبت.</p></div>
+      <div class="card reveal"><h3>📊 داشبورد مدیریت</h3><p>آمار نوبت‌ها، فهرست پزشکان و وضعیت مراجعان در پنل ادمین کلینیک.</p></div>
+      <div class="card reveal"><h3>📉 نمودار بازار</h3><p>کندل‌استیک روی Canvas با زوم و انتخاب بازه، همراه با تیکر لحظه‌ای.</p></div>
+      <div class="card reveal"><h3>🧮 ماشین‌حساب ریسک</h3><p>محاسبه‌ی حجم پوزیشن، حد ضرر و نسبت سود به ریسک در کریپتودسک.</p></div>
+      <div class="card reveal"><h3>⬇️ دانلود چندمنبعی</h3><p>کشف لینک، انتخاب کیفیت، ادغام با ffmpeg و ارسال فایل به تلگرام.</p></div>
+      <div class="card reveal"><h3>👥 مدیریت کاربران</h3><p>سهمیه، محدودیت حجم روزانه و مدیریت دسترسی در پنل dlbot.</p></div>
+      <div class="card reveal"><h3>🌍 چندزبانه</h3><p>ساختار i18n برای پیام‌های ربات با پشتیبانی فارسی و انگلیسی.</p></div>
+      <div class="card reveal"><h3>🔁 پروکسی معکوس</h3><p>مسیر <code>/dlbot/</code> بدون باز شدن پورت اضافه، با پشتیبانی WebSocket و آپلود.</p></div>
+      <div class="card reveal"><h3>📱 موبایل‌فرست</h3><p>همه‌ی صفحات با رویکرد موبایل‌اول و بدون اسکرول افقی در عرض ۳۲۰px.</p></div>
+      <div class="card reveal"><h3>⚙️ خودترمیم</h3><p>هر سرویس با <code>Restart=always</code> در systemd؛ بازگشت خودکار پس از کرش.</p></div>
+      <div class="card reveal"><h3>🧾 لاگ و رصد</h3><p>لاگ ساختاریافته در journald و access log انجینکس برای عیب‌یابی سریع.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="security">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> امنیت</span>
+      <h2>پیش‌فرض‌های <span>محافظه‌کارانه</span></h2>
+      <p>هیچ رمز، توکن یا کلیدی داخل کد نیست؛ همه از فایل محیطی با دسترسی 600 خوانده می‌شوند.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card reveal">
+        <h3><span class="ic">🛡</span> لایه شبکه</h3>
+        <ul class="feat">
+          <li>فقط پورت‌های ۸۰ و ۴۴۳ عمومی؛ سرویس‌ها روی <code>127.0.0.1</code> گوش می‌دهند</li>
+          <li>TLS نسخه ۱.۲ و ۱.۳ با گواهی Let's Encrypt و تمدید خودکار</li>
+          <li>فایروال UFW با سیاست deny پیش‌فرض</li>
+          <li>ورود SSH فقط با کلید (پسورد غیرفعال)</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">🔑</span> لایه اپلیکیشن</h3>
+        <ul class="feat">
+          <li>هدرهای <code>X-Content-Type-Options</code>، <code>X-Frame-Options</code>، <code>Referrer-Policy</code></li>
+          <li>هش رمز عبور با <code>crypto.scrypt</code> و مقایسه‌ی زمان‌ثابت</li>
+          <li>امضای کوکی نشست و اعتبارسنجی ورودی در همه‌ی APIها</li>
+          <li>محدودیت نرخ روی مسیرهای حساس و احراز هویت</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">🗄</span> داده و رازداری</h3>
+        <ul class="feat">
+          <li>متغیرهای حساس در <code>/etc/dlbot.env</code> با مجوز 600 و خارج از مخزن</li>
+          <li>الگوی <code>.env.example</code> در ریپو بدون مقدار واقعی</li>
+          <li>بکاپ منظم دیتابیس و فایل‌های داده پیش از هر تغییر</li>
+          <li>داده‌ی کاربران و فایل‌های دانلودشده در gitignore</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">🧭</span> عملیات</h3>
+        <ul class="feat">
+          <li>گیت‌هاب با Deploy Key اختصاصی و دسترسی نوشتن محدود به همین مخزن</li>
+          <li>بکاپ‌گیری قبل از هر تغییر با نام زمانی و امکان بازگشت سریع</li>
+          <li>بررسی <code>nginx -t</code> پیش از هر reload</li>
+          <li>جدا بودن محیط ایران و آلمان در زمان مهاجرت و انتقال بی‌خطر</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="devops">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> استقرار و نگه‌داری</span>
+      <h2>از <span>git push</span> تا سرویس زنده</h2>
+      <p>فرآیند استقرار به‌صورت اسکریپت و مستند در مخزن نگه‌داری می‌شود تا هر تغییر قابل بازتولید باشد.</p>
+    </div>
+    <div class="grid g2">
+      <div class="flow reveal">
+        <div class="flow-step"><div><h4>کد در مخزن</h4><p>تغییر روی برنچ <code>main</code> ثبت و با Deploy Key به GitHub فرستاده می‌شود.</p></div></div>
+        <div class="flow-step"><div><h4>دریافت روی سرور</h4><p><code>git pull</code> یا <code>rsync</code> فایل‌ها را در مسیر نهایی قرار می‌دهد.</p></div></div>
+        <div class="flow-step"><div><h4>کانفیگ سرویس</h4><p>vhost و unitها از پوشه‌ی <code>deploy/</code> کپی و با <code>nginx -t</code> اعتبارسنجی می‌شوند.</p></div></div>
+        <div class="flow-step"><div><h4>راه‌اندازی و ریلود</h4><p><code>systemctl reload nginx</code> و <code>systemctl restart &lt;app&gt;</code> بدون قطعی محسوس.</p></div></div>
+        <div class="flow-step"><div><h4>بررسی سلامت</h4><p>تست <code>/api/health</code> هر اپ و بررسی کد ۲۰۰ روی هر دامنه با <code>curl</code>.</p></div></div>
+        <div class="flow-step"><div><h4>بکاپ و برگشت</h4><p>آرشیو زمانی از داده و کانفیگ؛ بازگشت با یک دستور در صورت خطا.</p></div></div>
+      </div>
+
+      <div class="reveal">
+        <div class="code">
+<pre><span class="c"># 1) دریافت کد جدید</span>
+<span class="v">git</span> -C /srv/bathmanai-repo pull --ff-only
+<span class="c"># 2) کپی کانفیگ‌ها و تست انجینکس</span>
+<span class="v">cp</span> /srv/bathmanai-repo/deploy/nginx/*.conf \
+   /etc/nginx/sites-available/
+<span class="v">nginx</span> -t <span class="g">&&</span> systemctl reload nginx
+<span class="c"># 3) بازراه‌اندازی سرویس‌ها</span>
+<span class="v">systemctl</span> restart clinic cryptodesk dlbot
+<span class="c"># 4) تست سلامت</span>
+<span class="v">curl</span> -s -o /dev/null -w <span class="y">'%{http_code}\n'</span> \
+   -H <span class="y">'Host: clinic.bathmanai.ir'</span> http://127.0.0.1/api/health
+<span class="c"># 5) بررسی گواهی و تمدید</span>
+<span class="v">certbot</span> renew --dry-run</pre>
+        </div>
+        <div class="grid g2" style="margin-top:14px">
+          <div class="card" style="padding:16px"><h3 style="font-size:.9rem">🔔 پایش</h3><p style="font-size:.84rem">وضعیت سرویس‌ها با <code>systemctl status</code> و لاگ زنده با <code>journalctl -u</code>.</p></div>
+          <div class="card" style="padding:16px"><h3 style="font-size:.9rem">💾 بکاپ</h3><p style="font-size:.84rem">آرشیو <code>dlbot.sqlite</code>، <code>clinic/data</code> و کانفیگ‌ها پیش از هر تغییر.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="numbers">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> آمار کد</span>
+      <h2>اعداد <span>واقعی</span> مخزن</h2>
+      <p>شمارش مستقیم از <code>git ls-files</code> روی نسخه‌ی مستقر‌شده.</p>
+    </div>
+    <div class="grid g4">
+      <div class="stat reveal"><b data-count="65">۰</b><span>فایل ردیابی‌شده</span></div>
+      <div class="stat reveal"><b data-count="19255">۰</b><span>خط کد</span></div>
+      <div class="stat reveal"><b data-count="5">۰</b><span>سرویس در حال اجرا</span></div>
+      <div class="stat reveal"><b data-count="6">۰</b><span>دامنه با TLS</span></div>
+    </div>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card reveal">
+        <h3><span class="ic">📁</span> ساختار مخزن</h3>
+        <div class="code" style="margin-top:6px"><pre>site/          <span class="c"># پورتال bathmanai.ir</span>
+blupaper/      <span class="c"># فروشگاه بلوپیپر</span>
+jpx/           <span class="c"># صفحه فرود مستقل</span>
+clinic/        <span class="c"># سامانه نوبت‌دهی</span>
+cryptodesk/    <span class="c"># میز کار بازار</span>
+dlbot/         <span class="c"># ربات + پنل</span>
+deploy/        <span class="c"># nginx · systemd · env</span>
+.github/       <span class="c"># گردش‌کار انتشار</span></pre></div>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">⏱</span> زمان‌بندی پروژه</h3>
+        <div class="tl" style="margin-top:6px">
+          <div class="tl-item"><div class="when">مرحله ۱</div><b>پورتال و فروشگاه</b><p>طراحی و انتشار صفحه‌ی معرفی خدمات و فروشگاه بلوپیپر.</p></div>
+          <div class="tl-item"><div class="when">مرحله ۲</div><b>کلینیک مهر و کریپتودسک</b><p>دو سرویس Node.js با API و پنل، پشت Nginx و systemd.</p></div>
+          <div class="tl-item"><div class="when">مرحله ۳</div><b>ربات دانلودر</b><p>افزودن yt-dlp، ffmpeg، دیتابیس SQLite و پنل مدیریت.</p></div>
+          <div class="tl-item" style="padding-bottom:0"><div class="when">مرحله ۴</div><b>مهاجرت و یکپارچه‌سازی</b><p>انتقال کامل به سرور آلمان، TLS خودکار، monorepo و مستندات.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow"><i></i> نقشه راه</span>
+      <h2>قدم بعدی <span>این اکوسیستم</span></h2>
+      <p>اولویت‌ها بر اساس نیاز واقعی کاربران و پایداری سرویس در شرایط شبکه‌ی ایران تعیین می‌شوند.</p>
+    </div>
+    <div class="grid g3">
+      <div class="card reveal">
+        <h3><span class="ic">🛰</span> زیرساخت چندنودی</h3>
+        <p>افزودن نود دوم و مسیریابی هوشمند بین نودها برای پایداری بیشتر و کاهش تأخیر کاربران ایرانی.</p>
+        <div style="margin-top:10px"><span class="badge warn">در حال انجام</span></div>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">🔐</span> احراز هویت واقعی</h3>
+        <p>جایگزینی کد آزمایشی کلینیک با پنل پیامکی و نقش‌های دسترسی دقیق‌تر برای پرسنل.</p>
+        <div style="margin-top:10px"><span class="badge warn">در حال انجام</span></div>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">📦</span> فروشگاه کامل</h3>
+        <p>سبد خرید، درگاه پرداخت، مدیریت سفارش و پیگیری مرسوله برای بلوپیپر.</p>
+        <div style="margin-top:10px"><span class="badge">برنامه‌ریزی‌شده</span></div>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">🧪</span> تست خودکار</h3>
+        <p>تست دود و یکپارچه برای APIها و اجرای آن در GitHub Actions روی هر push.</p>
+        <div style="margin-top:10px"><span class="badge">برنامه‌ریزی‌شده</span></div>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">📊</span> داشبورد پایش</h3>
+        <p>نمودار ترافیک، سلامت سرویس‌ها و هشدار تلگرامی در صورت قطع شدن هر سرویس.</p>
+        <div style="margin-top:10px"><span class="badge">برنامه‌ریزی‌شده</span></div>
+      </div>
+      <div class="card reveal">
+        <h3><span class="ic">📱</span> تجربه موبایل</h3>
+        <p>تبدیل پورتال به PWA با نصب روی صفحه‌ی خانه و کارکرد آفلاین صفحات استاتیک.</p>
+        <div style="margin-top:10px"><span class="badge">ایده</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card reveal">
+      <span class="eyebrow"><i></i> ارتباط</span>
+      <h2>این پروژه در حال رشد است</h2>
+      <p>
+        کد، مستندات و تاریخچه‌ی تغییرات در GitHub نگه‌داری می‌شود. برای همکاری، بازخورد یا
+        گزارش مشکل از طریق مخزن یا سایت در ارتباط باشید.
+      </p>
+      <div class="links">
+        <a class="btn btn-primary" href="https://bathmanai.ir" target="_blank" rel="noopener">bathmanai.ir</a>
+        <a class="btn btn-ghost" href="https://github.com/mamadmari/bathmanai" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://clinic.bathmanai.ir" target="_blank" rel="noopener">کلینیک مهر</a>
+        <a class="btn btn-ghost" href="https://cryptodesk.bathmanai.ir" target="_blank" rel="noopener">کریپتودسک</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© ۲۰۲۶ bathmanai — ساخته‌شده با Node.js، Nginx و صفر وابستگی</span>
+    <span>مستندات فنی · نسخه ۱.۰</span>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="بازگشت به بالا">↑</button>
+
+<script>
+(function(){
+  "use strict";
+  var root=document.documentElement;
+  var fa=function(n){ try{ return n.toLocaleString('fa-IR'); }catch(e){ return String(n); } };
+
+  var themeBtn=document.getElementById('themeBtn');
+  try{ var saved=localStorage.getItem('bm-theme'); if(saved) root.setAttribute('data-theme',saved); }catch(e){}
+  var syncIcon=function(){ themeBtn.textContent = root.getAttribute('data-theme')==='light' ? '\u263E' : '\u2600'; };
+  syncIcon();
+  themeBtn.addEventListener('click',function(){
+    var next = root.getAttribute('data-theme')==='light' ? 'dark' : 'light';
+    root.setAttribute('data-theme',next);
+    try{ localStorage.setItem('bm-theme',next); }catch(e){}
+    syncIcon();
+  });
+
+  var burger=document.getElementById('burger'), links=document.getElementById('navLinks');
+  burger.addEventListener('click',function(){ links.classList.toggle('open'); });
+  links.addEventListener('click',function(e){ if(e.target.tagName==='A') links.classList.remove('open'); });
+
+  var prog=document.getElementById('progress'), toTop=document.getElementById('toTop');
+  var onScroll=function(){
+    var h=document.body.scrollHeight-window.innerHeight;
+    prog.style.width=(h>0 ? (window.scrollY/h)*100 : 0)+'%';
+    toTop.classList.toggle('show', window.scrollY>600);
+  };
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  toTop.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var animateCount=function(el){
+    var target=parseInt(el.getAttribute('data-count'),10)||0;
+    if(reduce || !target){ el.textContent=fa(target); return; }
+    var start=performance.now(), dur=1200;
+    var step=function(now){
+      var t=Math.min((now-start)/dur,1), eased=1-Math.pow(1-t,3);
+      el.textContent=fa(Math.round(target*eased));
+      if(t<1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      en.target.classList.add('in');
+      en.target.querySelectorAll('[data-count]').forEach(animateCount);
+      en.target.querySelectorAll('.bar i').forEach(function(b){ b.style.width=(b.getAttribute('data-w')||0)+'%'; });
+      io.unobserve(en.target);
+    });
+  },{threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  var secs=[].slice.call(document.querySelectorAll('section[id]'));
+  var navA=[].slice.call(document.querySelectorAll('.nav-links a'));
+  var spy=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      navA.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+en.target.id); });
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(function(s){ spy.observe(s); });
+})();
+</script>
+</body>
+</html>
