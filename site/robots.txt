@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bathmanai.ir/sitemap.xml

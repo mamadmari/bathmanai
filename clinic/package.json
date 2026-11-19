@@ -1,0 +1,16 @@
+{
+  "name": "clinic-mehr",
+  "version": "1.0.0",
+  "private": true,
+  "description": "کلینیک مهر — سیستم نوبت‌دهی پزشکی با پنل بیمار و مدیر (بدون وابستگی)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node smoke.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT"
+}

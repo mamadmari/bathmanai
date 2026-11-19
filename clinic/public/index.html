@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>کلینیک مهر | نوبت‌دهی آنلاین پزشکان</title>
+  <meta name="description" content="رزرو آنلاین نوبت پزشک در ۶ تخصص؛ انتخاب پزشک و ساعت از تقویم هفتگی، پیگیری نوبت‌ها و پنل مدیریت کلینیک">
+  <meta name="theme-color" content="#0e7490">
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%230e7490'/><path d='M16 8v16M8 16h16' stroke='%23ffffff' stroke-width='4.5' stroke-linecap='round'/></svg>">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- ══════════════════════════ ورود با موبایل ══════════════════════════ -->
+<section id="loginView" class="login-wrap">
+  <div class="login-card">
+    <aside class="login-aside">
+      <div class="brand-lockup">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+        </span>
+        <div>
+          <strong>کلینیک مهر</strong>
+          <small>سامانه نوبت‌دهی تخصصی</small>
+        </div>
+      </div>
+
+      <h1>نوبت پزشک، بدون صف و بدون تماس تلفنی</h1>
+      <p class="login-lead">۶ تخصص، ۱۸ پزشک نمونه و تقویم هفتگی ساعت‌های آزاد. ورود فقط با شماره موبایل انجام می‌شود.</p>
+
+      <ul class="login-points">
+        <li><span class="dot-i"></span>انتخاب تخصص با المان و رنگ اختصاصی</li>
+        <li><span class="dot-i"></span>مشاهده ساعت‌های آزاد هر پزشک</li>
+        <li><span class="dot-i"></span>لغو و پیگیری نوبت از پنل شخصی</li>
+        <li><span class="dot-i"></span>دید مدیریت: تأیید، انجام و لغو نوبت‌ها</li>
+      </ul>
+
+      <div class="login-demo">
+        <div>
+          <span>کد ورود آزمایشی</span>
+          <strong id="demoCodeLabel">11111</strong>
+        </div>
+        <small>مدیر نمونه: ۰۹۱۲۰۰۰۰۰۰۰ — این کد در نسخه واقعی با پیامک ارسال می‌شود.</small>
+      </div>
+    </aside>
+
+    <div class="login-form-side">
+      <form id="loginForm" class="login-form" autocomplete="off" novalidate>
+        <div class="step" data-step="1">
+          <h2>ورود / ثبت‌نام</h2>
+          <p class="muted">برای دریافت کد تأیید، شماره موبایل خود را وارد کنید.</p>
+
+          <label class="field">
+            <span>شماره موبایل</span>
+            <input id="mobileInput" name="mobile" type="tel" inputmode="numeric" maxlength="11" placeholder="09121234567" dir="ltr">
+          </label>
+
+          <button type="button" id="requestCodeBtn" class="btn btn-primary btn-block">
+            دریافت کد تأیید
+          </button>
+
+          <div class="quick-login">
+            <button type="button" class="chip" data-quick="09121234567">ورود سریع مریض نمونه</button>
+            <button type="button" class="chip chip-admin" data-quick="09120000000">ورود سریع مدیر</button>
+          </div>
+        </div>
+
+        <div class="step hidden" data-step="2">
+          <h2>کد تأیید را وارد کنید</h2>
+          <p class="muted">کد برای <strong id="loginMobileLabel" dir="ltr">—</strong> ارسال شد.</p>
+
+          <div class="demo-banner" id="demoBanner">
+            <span>حالت آزمایشی — کد روی صفحه نمایش داده می‌شود:</span>
+            <strong id="codeEcho">11111</strong>
+          </div>
+
+          <label class="field">
+            <span>کد تأیید</span>
+            <input id="codeInput" name="code" type="tel" inputmode="numeric" maxlength="6" placeholder="11111" dir="ltr">
+          </label>
+
+          <button type="button" id="verifyBtn" class="btn btn-primary btn-block">ورود به کلینیک</button>
+          <button type="button" id="backToMobile" class="btn btn-ghost btn-block">تغییر شماره موبایل</button>
+        </div>
+
+        <p id="loginError" class="form-error hidden" role="alert"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════ اپلیکیشن ══════════════════════════ -->
+<div id="appView" class="hidden">
+  <header class="appbar">
+    <div class="brand-lockup">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+      </span>
+      <div>
+        <strong>کلینیک مهر</strong>
+        <small id="roleLabel">پنل بیمار</small>
+      </div>
+    </div>
+
+    <nav class="tabs" id="tabs" aria-label="منوی اصلی"></nav>
+
+    <div class="user-box">
+      <span class="avatar" id="userAvatar">م</span>
+      <div class="user-meta">
+        <strong id="userName">کاربر</strong>
+        <small id="userMobile" dir="ltr">—</small>
+      </div>
+      <button id="logoutBtn" class="btn btn-ghost btn-sm" type="button">خروج</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ─────────── رزرو نوبت (بیمار) ─────────── -->
+    <section id="tab-book" class="tab-panel">
+      <div class="page-head">
+        <div>
+          <h2>رزرو نوبت</h2>
+          <p class="muted">ابتدا تخصص، سپس پزشک و ساعت مراجعه را انتخاب کنید.</p>
+        </div>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="doctorSearch" type="search" placeholder="جست‌وجوی نام پزشک…">
+        </div>
+      </div>
+
+      <div id="specialtyGrid" class="specialty-grid"></div>
+      <div id="doctorArea" class="doctor-area hidden"></div>
+    </section>
+
+    <!-- ─────────── نوبت‌های من (بیمار) ─────────── -->
+    <section id="tab-mine" class="tab-panel hidden">
+      <div class="page-head">
+        <div>
+          <h2>نوبت‌های من</h2>
+          <p class="muted">وضعیت نوبت‌ها را ببینید و در صورت نیاز لغو کنید.</p>
+        </div>
+        <button id="refreshMine" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+      </div>
+      <div id="mineStats" class="stats-row"></div>
+      <div id="mineList" class="appt-list"></div>
+    </section>
+
+    <!-- ─────────── داشبورد (مدیر) ─────────── -->
+    <section id="tab-dashboard" class="tab-panel admin-tab hidden">
+      <div class="page-head">
+        <div>
+          <h2>داشبورد مدیریت</h2>
+          <p class="muted">نمای کلی نوبت‌ها، بار کاری پزشکان و توزیع تخصص‌ها.</p>
+        </div>
+        <button id="refreshDashboard" class="btn btn-ghost btn-sm" type="button">به‌روزرسانی</button>
+      </div>
+
+      <div id="kpiGrid" class="kpi-grid"></div>
+
+      <div class="split">
+        <div class="card">
+          <div class="card-head"><h3>نوبت‌های ۷ روز آینده</h3><span class="muted small" id="weekRange"></span></div>
+          <div id="weekChart" class="week-chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>توزیع نوبت‌ها در تخصص‌ها</h3></div>
+          <div id="specialtyBars" class="bar-list"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>پزشکان پرمراجعه</h3></div>
+        <div id="topDoctors" class="top-doctors"></div>
+      </div>
+    </section>
+
+    <!-- ─────────── مدیریت نوبت‌ها (مدیر) ─────────── -->
+    <section id="tab-appts" class="tab-panel admin-tab hidden">
+      <div class="page-head">
+        <div>
+          <h2>مدیریت نوبت‌ها</h2>
+          <p class="muted">فیلتر کنید و وضعیت هر نوبت را تغییر دهید.</p>
+        </div>
+      </div>
+
+      <div class="filters card">
+        <label class="field field-inline">
+          <span>وضعیت</span>
+          <select id="filterStatus">
+            <option value="">همه</option>
+            <option value="pending">در انتظار تأیید</option>
+            <option value="confirmed">تأییدشده</option>
+            <option value="done">انجام‌شده</option>
+            <option value="canceled">لغوشده</option>
+          </select>
+        </label>
+        <label class="field field-inline">
+          <span>تاریخ</span>
+          <input id="filterDate" type="date" dir="ltr">
+        </label>
+        <label class="field field-inline">
+          <span>پزشک</span>
+          <select id="filterDoctor"><option value="">همه پزشکان</option></select>
+        </label>
+        <label class="field field-inline grow">
+          <span>جست‌وجو</span>
+          <input id="filterQuery" type="search" placeholder="نام بیمار یا موبایل">
+        </label>
+        <button id="clearFilters" class="btn btn-ghost btn-sm" type="button">پاک‌کردن</button>
+      </div>
+
+      <div id="adminApptList" class="admin-appt-list"></div>
+    </section>
+
+    <!-- ─────────── مدیریت پزشکان (مدیر) ─────────── -->
+    <section id="tab-doctors" class="tab-panel admin-tab hidden">
+      <div class="page-head">
+        <div>
+          <h2>مدیریت پزشکان</h2>
+          <p class="muted">پزشکان را فعال/غیرفعال کنید، تعرفه را تغییر دهید یا پزشک جدید اضافه کنید.</p>
+        </div>
+        <button id="addDoctorBtn" class="btn btn-primary" type="button">افزودن پزشک</button>
+      </div>
+      <div id="adminDoctorList" class="admin-doctor-list"></div>
+    </section>
+
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+[Unit]
+Description=Clinic Mehr - appointment booking system
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/clinic
+Environment=PORT=8788
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+LimitNOFILE=4096
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

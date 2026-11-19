@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CryptoDesk | میز معاملات کریپتو</title>
+  <meta name="description" content="محیط تریدینگ کریپتو با نمودار لحظه‌ای، واچ‌لیست، نمای کلی بازار و ماشین‌حساب‌های حرفه‌ای معاملاتی">
+  <meta name="theme-color" content="#070b14">
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='9' fill='%230b1220'/><text x='16' y='23' font-size='19' font-family='sans-serif' text-anchor='middle' fill='%2322d3a0'>%E2%82%BF</text></svg>">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">₿</span>
+      <div class="brand-text">
+        <strong>CryptoDesk</strong>
+        <small>میز معاملات کریپتو</small>
+      </div>
+    </div>
+
+    <nav class="topnav">
+      <a href="#chart">نمودار</a>
+      <a href="#market">بازار</a>
+      <a href="#tools">ماشین‌حساب‌ها</a>
+    </nav>
+
+    <div class="conn" id="connBadge" data-state="loading">
+      <span class="dot"></span>
+      <span id="connText">در حال اتصال…</span>
+    </div>
+  </header>
+
+  <div class="ticker-strip" aria-label="نرخ لحظه‌ای بازار">
+    <div class="ticker-track" id="tickerTrack">
+      <span class="ticker-placeholder">در حال دریافت نرخ‌ها…</span>
+    </div>
+  </div>
+
+  <main class="layout">
+    <section class="panel chart-panel" id="chart">
+      <div class="chart-toolbar">
+        <div class="symbol-picker" id="symbolPicker">
+          <button type="button" class="symbol-btn" id="symbolBtn" aria-haspopup="listbox" aria-expanded="false">
+            <span id="symbolBtnText">BTC/USDT</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="symbol-menu" id="symbolMenu" hidden>
+            <input type="search" id="symbolSearch" placeholder="جست‌وجوی نماد… مثلاً ETH یا PEPEUSDT" autocomplete="off">
+            <div class="symbol-list" id="symbolList" role="listbox"></div>
+          </div>
+        </div>
+
+        <div class="price-block">
+          <div class="last-price" id="lastPrice">—</div>
+          <div class="price-change" id="priceChange">—</div>
+        </div>
+
+        <dl class="chart-stats">
+          <div><dt>بالاترین ۲۴س</dt><dd id="statHigh">—</dd></div>
+          <div><dt>پایین‌ترین ۲۴س</dt><dd id="statLow">—</dd></div>
+          <div><dt>حجم ۲۴س</dt><dd id="statVol">—</dd></div>
+        </dl>
+      </div>
+
+      <div class="tf-row" id="timeframes" role="tablist" aria-label="تایم‌فریم">
+        <button type="button" data-interval="1m">۱m</button>
+        <button type="button" data-interval="5m">۵m</button>
+        <button type="button" data-interval="15m">۱۵m</button>
+        <button type="button" data-interval="30m">۳۰m</button>
+        <button type="button" data-interval="1h" class="active">۱h</button>
+        <button type="button" data-interval="4h">۴h</button>
+        <button type="button" data-interval="1d">۱D</button>
+        <button type="button" data-interval="1w">۱W</button>
+      </div>
+
+      <div class="chart-wrap" id="chartWrap">
+        <canvas id="chartCanvas"></canvas>
+        <div class="chart-tooltip" id="chartTooltip" hidden></div>
+        <div class="chart-overlay" id="chartOverlay">در حال بارگذاری نمودار…</div>
+      </div>
+
+      <div class="chart-footer">
+        <span class="tag" id="chartSource">منبع: —</span>
+        <span id="chartUpdated">—</span>
+        <span class="hint">چرخ ماوس = زوم • کشیدن = جابه‌جایی</span>
+      </div>
+    </section>
+
+    <aside class="side" id="market">
+      <section class="panel overview">
+        <div class="panel-head">
+          <h2>نمای کلی بازار</h2>
+          <span class="hint" id="overviewUpdated">—</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><span>ارزش کل بازار</span><strong id="gMcap">—</strong></div>
+          <div class="kpi"><span>حجم ۲۴ ساعته</span><strong id="gVol">—</strong></div>
+          <div class="kpi"><span>دامیننس BTC</span><strong id="gBtcDom">—</strong></div>
+          <div class="kpi"><span>تغییر ۲۴ ساعته</span><strong id="gChange">—</strong></div>
+        </div>
+        <div class="movers">
+          <div class="movers-col">
+            <h3>بیشترین رشد</h3>
+            <ul id="gainers" class="mover-list"></ul>
+          </div>
+          <div class="movers-col">
+            <h3>بیشترین ریزش</h3>
+            <ul id="losers" class="mover-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel watchlist">
+        <div class="panel-head">
+          <h2>واچ‌لیست</h2>
+          <button type="button" class="ghost-btn" id="addWatchBtn">+ افزودن</button>
+        </div>
+        <ul id="watchList" class="watch-list"></ul>
+        <p class="empty" id="watchEmpty">هنوز نمادی اضافه نکرده‌اید؛ با دکمه‌ی «افزودن» نماد دلخواه را پیگیری کنید.</p>
+      </section>
+    </aside>
+  </main>
+
+  <section class="panel tools" id="tools">
+    <div class="panel-head">
+      <h2>ماشین‌حساب‌های معاملاتی</h2>
+      <span class="hint">همه‌ی محاسبات به‌صورت محلی در مرورگر انجام می‌شود.</span>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="position" role="tab" aria-selected="true">سایز پوزیشن</button>
+      <button type="button" class="tab" data-tab="pnl" role="tab" aria-selected="false">سود و زیان</button>
+      <button type="button" class="tab" data-tab="dca" role="tab" aria-selected="false">میانگین ورود</button>
+      <button type="button" class="tab" data-tab="convert" role="tab" aria-selected="false">تبدیل ارز</button>
+      <button type="button" class="tab" data-tab="liq" role="tab" aria-selected="false">لیکوییدیشن</button>
+    </div>
+
+    <div class="tab-panel active" data-panel="position">
+      <div class="calc-grid">
+        <div class="fields">
+          <label>سرمایه کل (USDT)
+            <input id="posCapital" type="number" value="1000" min="0" step="any" inputmode="decimal">
+          </label>
+          <label>ریسک هر معامله (%)
+            <input id="posRisk" type="number" value="1" min="0" step="any" inputmode="decimal">
+          </label>
+          <label>قیمت ورود
+            <input id="posEntry" type="number" step="any" inputmode="decimal" placeholder="مثلاً 65000">
+          </label>
+          <label>حد ضرر
+            <input id="posStop" type="number" step="any" inputmode="decimal" placeholder="مثلاً 63000">
+          </label>
+          <label>هدف سود (اختیاری)
+            <input id="posTarget" type="number" step="any" inputmode="decimal" placeholder="مثلاً 70000">
+          </label>
+          <label>اهرم
+            <input id="posLeverage" type="number" value="10" min="1" step="1" inputmode="numeric">
+          </label>
+          <label>کارمزد هر طرف (%)
+            <input id="posFee" type="number" value="0.04" min="0" step="any" inputmode="decimal">
+          </label>
+          <label class="checkbox-label">
+            <input id="posSyncPrice" type="checkbox" checked>
+            <span>قیمت ورود از نرخ لحظه‌ای پر شود</span>
+          </label>
+        </div>
+        <div class="results" id="posResults"></div>
+      </div>
+      <p class="calc-note">
+        حجم پوزیشن از رابطه‌ی «مبلغ ریسک ÷ فاصله‌ی ورود تا حد ضرر» محاسبه می‌شود؛ به این ترتیب حتی در صورت فعال شدن
+        حد ضرر، زیان شما از درصد تعیین‌شده بیشتر نمی‌شود. لیکوییدیشن نمایش‌داده‌شده تخمینی است و به نرخ نگهداری مارجین
+        صرافی بستگی دارد.
+      </p>
+    </div>
+
+    <div class="tab-panel" data-panel="pnl">
+      <div class="calc-grid">
+        <div class="fields">
+          <label>جهت معامله
+            <select id="pnlSide">
+              <option value="long">خرید (Long)</option>
+              <option value="short">فروش (Short)</option>
+            </select>
+          </label>
+          <label>قیمت ورود
+            <input id="pnlEntry" type="number" step="any" inputmode="decimal" placeholder="مثلاً 65000">
+          </label>
+          <label>قیمت خروج
+            <input id="pnlExit" type="number" step="any" inputmode="decimal" placeholder="مثلاً 68000">
+          </label>
+          <label>مقدار (تعداد کوین)
+            <input id="pnlQty" type="number" step="any" inputmode="decimal" placeholder="مثلاً 0.5">
+          </label>
+          <label>اهرم
+            <input id="pnlLeverage" type="number" value="1" min="1" step="1" inputmode="numeric">
+          </label>
+          <label>کارمزد هر طرف (%)
+            <input id="pnlFee" type="number" value="0.04" min="0" step="any" inputmode="decimal">
+          </label>
+        </div>
+        <div class="results" id="pnlResults"></div>
+      </div>
+      <p class="calc-note">سود خالص پس از کسر کارمزد ورود و خروج محاسبه می‌شود. ROE بازدهی روی مارجین و ROI بازدهی روی ارزش کل پوزیشن است.</p>
+    </div>
+
+    <div class="tab-panel" data-panel="dca">
+      <div class="dca-grid">
+        <div class="dca-table">
+          <div class="dca-head">
+            <span>قیمت خرید</span>
+            <span>مقدار (کوین)</span>
+            <span></span>
+          </div>
+          <div id="dcaRows"></div>
+          <button type="button" class="ghost-btn" id="dcaAddBtn">+ ردیف جدید</button>
+        </div>
+        <div class="results" id="dcaResults"></div>
+      </div>
+      <p class="calc-note">میانگین ورود وزنی بر اساس مقدار کوین هر خرید محاسبه می‌شود. با دکمه‌ی «قیمت بازار» می‌توانید قیمت لحظه‌ای نماد فعال را در ردیف قرار دهید.</p>
+    </div>
+
+    <div class="tab-panel" data-panel="convert">
+      <div class="calc-grid">
+        <div class="fields">
+          <label>مقدار
+            <input id="cvtAmount" type="number" value="1" step="any" inputmode="decimal">
+          </label>
+          <label>از واحد
+            <select id="cvtFrom"></select>
+          </label>
+          <label>به واحد
+            <select id="cvtTo"></select>
+          </label>
+          <label>نرخ دلار (تومان)
+            <input id="cvtRate" type="number" value="100000" min="0" step="any" inputmode="decimal">
+          </label>
+          <button type="button" class="ghost-btn" id="cvtSwapBtn">جابه‌جایی واحدها ⇄</button>
+        </div>
+        <div class="convert-result">
+          <div class="big-result" id="cvtResult">—</div>
+          <div class="hint" id="cvtFormula">نرخ‌ها از بازار لحظه‌ای خوانده می‌شوند.</div>
+          <div class="quick-units" id="cvtQuick"></div>
+        </div>
+      </div>
+      <p class="calc-note">تبدیل بر پایه‌ی قیمت دلاری لحظه‌ای انجام می‌شود و نرخ تومان را خودتان وارد می‌کنید؛ بنابراین نتیجه با نرخ صرافی خودتان هم‌خوان است.</p>
+    </div>
+
+    <div class="tab-panel" data-panel="liq">
+      <div class="calc-grid">
+        <div class="fields">
+          <label>جهت معامله
+            <select id="liqSide">
+              <option value="long">خرید (Long)</option>
+              <option value="short">فروش (Short)</option>
+            </select>
+          </label>
+          <label>قیمت ورود
+            <input id="liqEntry" type="number" step="any" inputmode="decimal" placeholder="مثلاً 65000">
+          </label>
+          <label>اهرم
+            <input id="liqLeverage" type="number" value="10" min="1" step="1" inputmode="numeric">
+          </label>
+          <label>نرخ نگهداری مارجین (%)
+            <input id="liqMmr" type="number" value="0.5" min="0" step="any" inputmode="decimal">
+          </label>
+          <label>بالانس حساب (اختیاری – USDT)
+            <input id="liqBalance" type="number" step="any" inputmode="decimal" placeholder="مثلاً 500">
+          </label>
+        </div>
+        <div class="results" id="liqResults"></div>
+      </div>
+      <p class="calc-note">فرمول تقریبی لیکوییدیشن معاملات مارجین: برای خرید <code>ورود × (۱ − ۱/اهرم + MMR)</code> و برای فروش <code>ورود × (۱ + ۱/اهرم − MMR)</code>. صرافی‌ها ممکن است با فرمول و کارمزد متفاوت محاسبه کنند.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p><strong>CryptoDesk</strong> — داده‌ها از APIهای عمومی صرافی‌ها و CoinGecko خوانده می‌شوند و ممکن است با نرخ صرافی شما اختلاف جزئی داشته باشد.</p>
+    <p class="disclaimer">این ابزار صرفاً برای آموزش و تحلیل است و توصیه‌ی مالی محسوب نمی‌شود؛ مسئولیت تصمیم‌های معاملاتی با شماست.</p>
+  </footer>
+
+  <div class="modal" id="watchModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="افزودن نماد به واچ‌لیست">
+      <div class="modal-head">
+        <h3>افزودن نماد به واچ‌لیست</h3>
+        <button type="button" class="icon-btn" id="watchModalClose" aria-label="بستن">×</button>
+      </div>
+      <input type="search" id="watchSearch" placeholder="جست‌وجو یا وارد کردن نماد… مثلاً SOL یا TONUSDT" autocomplete="off">
+      <div class="symbol-list" id="watchSearchList"></div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+  <script src="/chart.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

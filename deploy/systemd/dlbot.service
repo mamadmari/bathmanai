@@ -1,0 +1,19 @@
+[Unit]
+Description=dlbot - Telegram universal downloader bot + web panel
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/dlbot
+EnvironmentFile=/etc/dlbot.env
+ExecStart=/usr/bin/node --experimental-sqlite /opt/dlbot/src/server.js
+Restart=always
+RestartSec=3
+User=root
+LimitNOFILE=65535
+StandardOutput=append:/var/log/dlbot.log
+StandardError=append:/var/log/dlbot.log
+
+[Install]
+WantedBy=multi-user.target
