@@ -1,0 +1,13 @@
+{
+  "name": "btm-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Telegram service-management bot for the bathmanai NX stack (zero dependencies)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node --check src/server.js && node --check src/handlers.js && node --check src/ui.js"
+  },
+  "engines": { "node": ">=20" },
+  "license": "MIT"
+}

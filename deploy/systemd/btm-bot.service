@@ -1,0 +1,23 @@
+[Unit]
+Description=btm-bot - Telegram service bot (bathmanai)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/btm-bot
+EnvironmentFile=/etc/btm-bot.env
+ExecStart=/usr/bin/node /opt/btm-bot/src/server.js
+Restart=always
+RestartSec=3
+User=root
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/btm-bot
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
