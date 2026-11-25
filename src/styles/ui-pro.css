@@ -1,0 +1,203 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   ui-ux-pro-max design layer for Trading Wolf
+   From the skill's design system:
+     python3 .claude/skills/ui-ux-pro-max/scripts/search.py \
+       "trading dashboard fintech dark professional mobile rtl" --design-system
+   Style: Dark Mode (OLED) · Pattern: Enterprise Gateway · Font: Inter + Vazirmatn
+   Loaded AFTER wolf-ui.css: it sets tokens and normalises components, it never
+   rewrites a component that already looks right.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.w-root {
+  --u-bg: #020617;
+  --u-card: #0e1223;
+  --u-card-2: #131a2e;
+  --u-border: #334155;
+  --u-fg: #f8fafc;
+  --u-muted-fg: #94a3b8;
+  --u-accent: #22c55e;
+  --u-danger: #ef4444;
+  --u-warn: #f59e0b;
+  --u-ring: #ffffff;
+
+  --u-1: 4px;  --u-2: 8px;  --u-3: 12px; --u-4: 16px;
+  --u-5: 20px; --u-6: 24px; --u-8: 32px; --u-10: 40px;
+
+  --u-r-sm: 10px; --u-r-md: 14px; --u-r-lg: 18px; --u-r-full: 999px;
+  --u-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --u-fast: 150ms; --u-med: 220ms;
+
+  --w-bg: var(--u-bg);
+  --w-line: color-mix(in srgb, var(--u-border) 28%, transparent);
+  --w-line-2: color-mix(in srgb, var(--u-border) 55%, transparent);
+  --w-text: var(--u-fg);
+  --w-muted: var(--u-muted-fg);
+  --w-up: var(--u-accent);
+  --w-down: var(--u-danger);
+
+  overflow-x: clip;
+  font-variant-numeric: tabular-nums;
+}
+
+html.light .w-root {
+  --u-bg: #f6f8fb;
+  --u-card: #ffffff;
+  --u-card-2: #f1f5f9;
+  --u-border: #cbd5e1;
+  --u-fg: #0f172a;
+  --u-muted-fg: #475569;
+  --u-ring: #0f172a;
+  --w-line: color-mix(in srgb, var(--u-border) 60%, transparent);
+  --w-line-2: var(--u-border);
+  --w-text: var(--u-fg);
+  --w-muted: var(--u-muted-fg);
+}
+
+/* ── accessibility: one visible focus ring, everywhere ─────────────────────── */
+.w-root :where(a, button, [role="button"], input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--u-ring);
+  outline-offset: 2px;
+  border-radius: var(--u-r-sm);
+}
+.w-root :where(button, [role="button"], a[href]) { cursor: pointer; }
+.w-root :where(button, [role="button"]):disabled,
+.w-root [aria-disabled="true"] { cursor: not-allowed; opacity: 0.55; }
+.w-root :where(.w-btn, .w-side-link, .w-tab, .w-chip-btn):active { transform: none; filter: brightness(1.12); }
+
+/* ── surfaces: one card / table / field look ───────────────────────────────── */
+.w-root .w-card,
+.w-root .w-posc {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--u-card) 94%, transparent),
+    color-mix(in srgb, var(--u-card-2) 88%, transparent));
+  border: 1px solid var(--w-line);
+  border-radius: var(--u-r-lg);
+}
+.w-root .w-card-pad { padding: var(--u-4); }
+
+.w-root table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.w-root thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: color-mix(in srgb, var(--u-card) 96%, transparent);
+  color: var(--u-muted-fg);
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em;
+  padding: var(--u-2) var(--u-3);
+  border-bottom: 1px solid var(--w-line-2);
+  white-space: nowrap;
+}
+.w-root tbody td { padding: var(--u-2) var(--u-3); border-bottom: 1px solid var(--w-line); font-size: 13px; }
+.w-root tbody tr:hover td { background: color-mix(in srgb, var(--u-accent) 6%, transparent); }
+.w-root .w-table-wrap,
+.w-root .w-scroll-x { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+/* ── controls: 44px touch targets, consistent radii ────────────────────────── */
+.w-root :where(input, select, textarea) {
+  min-height: 42px;
+  background: color-mix(in srgb, var(--u-card-2) 70%, transparent);
+  border: 1px solid var(--w-line-2);
+  border-radius: var(--u-r-md);
+  color: var(--u-fg);
+  padding: 0 var(--u-3);
+  transition: border-color var(--u-fast) var(--u-ease), background var(--u-fast) var(--u-ease);
+}
+.w-root :where(input, select, textarea):hover { border-color: color-mix(in srgb, var(--u-accent) 40%, var(--w-line-2)); }
+.w-root input::placeholder, .w-root textarea::placeholder { color: color-mix(in srgb, var(--u-muted-fg) 80%, transparent); }
+
+@media (pointer: coarse) {
+  .w-root :where(.w-btn, .w-tab, .w-side-link, .w-btn-icon) { min-height: 44px; min-width: 44px; }
+  .w-root :where(input, select, textarea) { min-height: 46px; font-size: 16px; }
+}
+
+/* ── layout: the classic grid overflow bugs ───────────────────────────────── */
+.w-root .w-shell { min-width: 0; }
+.w-root .w-main { min-width: 0; }
+.w-root .w-body { max-width: 1440px; margin-inline: auto; padding-inline: var(--u-4); }
+.w-root :where(.w-grid, .w-kpi6, .w-posc-wrap) > * { min-width: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .w-root *, .w-root *::before, .w-root *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── MOBILE APP MODE (/m) ─────────────────────────────────────────────────── */
+/* The sidebar used to be display:none in mobile mode, so the burger opened
+   nothing at all. It is now an off-canvas drawer plus a real bottom tab bar. */
+.w-force-m .w-side {
+  display: flex !important;
+  flex-direction: column;
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: min(86vw, 330px);
+  z-index: 60;
+  transform: translateX(105%);
+  transition: transform var(--u-med) var(--u-ease);
+  background: color-mix(in srgb, var(--u-card) 98%, black);
+  border-inline-start: 1px solid var(--w-line-2);
+  box-shadow: -18px 0 44px -22px rgba(0, 0, 0, 0.9);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
+}
+.w-force-m .w-side.is-open { transform: translateX(0); }
+
+.w-force-m .w-main { padding-bottom: calc(78px + env(safe-area-inset-bottom)); min-height: 100dvh; }
+.w-force-m .w-body { padding-inline: var(--u-3); }
+
+.w-force-m .w-topbar {
+  position: sticky; top: 0; z-index: 40;
+  padding-top: env(safe-area-inset-top);
+  background: color-mix(in srgb, var(--u-bg) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--w-line);
+}
+
+.w-mtabs {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 70;
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--u-card) 94%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-top: 1px solid var(--w-line-2);
+}
+.w-force-m .w-mtabs { display: grid; }
+.w-mtabs button {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; min-height: 48px; padding: 4px 2px;
+  background: transparent; border: 0; border-radius: var(--u-r-md);
+  color: var(--u-muted-fg); font-size: 10.5px; font-weight: 600; line-height: 1;
+  transition: color var(--u-fast) var(--u-ease), background var(--u-fast) var(--u-ease);
+}
+.w-mtabs button[aria-current="page"] { color: var(--u-accent); background: color-mix(in srgb, var(--u-accent) 12%, transparent); }
+.w-mtabs button:active { background: color-mix(in srgb, var(--u-fg) 8%, transparent); }
+
+@media (max-width: 760px) {
+  .w-force-m :where(.w-kpi6, .w-posc-wrap, .w-grid-2, .w-grid-3, .w-grid-4) {
+    grid-template-columns: 1fr !important;
+    gap: var(--u-3) !important;
+  }
+  .w-force-m .w-modal-card { width: 100%; max-width: 100%; border-radius: var(--u-r-lg) var(--u-r-lg) 0 0; }
+  .w-force-m .w-modal { align-items: flex-end; }
+}
+
+@media (min-width: 981px) {
+  .w-root .w-body { padding-inline: var(--u-6); }
+}
+/* ── position card legibility (labels are Persian + numbers) ───────────────── */
+.w-root .w-posc-fig { gap: 2px; }
+.w-root .w-posc-fig > span { font-size: 10.5px; color: var(--w-muted); letter-spacing: 0; }
+.w-root .w-posc-fig > b { font-size: 12.5px; line-height: 1.35; }
+.w-root .w-posc-fig > b .w-tiny { font-size: 10px; }
+.w-root .w-posc-head b, .w-root .w-posc-title { font-size: 14px; }
+.w-root .w-posc-pnl > b { font-size: 15.5px; }
+.w-root .w-posc-bar { height: 8px; border-radius: 999px; }
+.w-root .w-posc-actions .w-btn { min-height: 38px; }
+@media (pointer: coarse) { .w-root .w-posc-actions .w-btn { min-height: 44px; } }

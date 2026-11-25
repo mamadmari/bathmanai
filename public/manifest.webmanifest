@@ -1,0 +1,25 @@
+{
+  "name": "Trading Wolf AI",
+  "short_name": "Wolf AI",
+  "description": "Autonomous crypto trading engine, signals and portfolio dashboard.",
+  "start_url": "/m",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "lang": "fa",
+  "dir": "rtl",
+  "categories": ["finance", "business", "productivity"],
+  "shortcuts": [
+    { "name": "پنل موبایل", "short_name": "موبایل", "url": "/m" },
+    { "name": "دسکتاپ", "short_name": "دسکتاپ", "url": "/pc" },
+    { "name": "کنسول ادمین", "short_name": "ادمین", "url": "/admin" }
+  ],
+  "icons": [
+    { "src": "/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" },
+    { "src": "/logo.jpg", "sizes": "192x192 512x512", "type": "image/jpeg", "purpose": "any" }
+  ]
+}

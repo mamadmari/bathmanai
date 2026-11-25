@@ -1,0 +1,121 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Landing / marketing pages — responsive layer
+   Rules applied from ui-ux-pro-max: mobile-first breakpoints, no horizontal
+   scroll, 4/8 rhythm, legible Persian body text, 44px targets, ≤5 nav items.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+html { -webkit-text-size-adjust: 100%; }
+
+/* Persian body copy must not inherit the 600 weight used for UI labels */
+.w-root .w-p,
+.w-root p,
+.w-root li { font-weight: 450; line-height: 1.9; }
+.w-root .w-p { max-width: 62ch; }
+html[lang="fa"] .w-root .w-h1,
+html[lang="fa"] .w-root .w-h2,
+html[lang="fa"] .w-root .w-h3 { letter-spacing: 0; line-height: 1.28; }
+.w-root :where(.w-h1, .w-h2, .w-h3) { text-wrap: balance; }
+.w-root .w-p { text-wrap: pretty; }
+.w-root .w-tiny { font-size: 11.5px; line-height: 1.7; }
+
+/* ── nav ───────────────────────────────────────────────────────────────────── */
+.w-nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+}
+.w-nav .w-wrap { min-height: 64px; gap: 10px; }
+.w-nav .w-wrap > a img { flex: none; }
+.w-nav-mobile-btn { display: none; }
+.w-nav-sheet {
+  position: fixed; inset: 0; z-index: 90;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: calc(64px + env(safe-area-inset-top)) 12px 24px;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(6px);
+  animation: w-fade 160ms var(--u-ease, ease);
+}
+.w-nav-sheet-card {
+  width: min(420px, 100%);
+  background: color-mix(in srgb, var(--u-card, #0e1223) 98%, black);
+  border: 1px solid var(--w-line-2, #334155);
+  border-radius: var(--u-r-lg, 18px);
+  padding: 16px;
+  box-shadow: 0 30px 80px -40px #000;
+}
+.w-nav-sheet-link {
+  display: flex; align-items: center; min-height: 48px;
+  padding: 0 10px; border-radius: 12px;
+  font-weight: 700; font-size: 14.5px; color: var(--w-text);
+}
+.w-nav-sheet-link:hover, .w-nav-sheet-link:focus-visible { background: rgba(255, 255, 255, 0.06); color: var(--w-gold); }
+@keyframes w-fade { from { opacity: 0 } to { opacity: 1 } }
+
+@media (max-width: 900px) {
+  .w-nav-links { display: none; }
+  .w-nav-mobile-btn { display: inline-flex; }
+}
+@media (max-width: 420px) {
+  .w-nav .w-wrap { padding-inline: 14px; }
+  .w-nav .w-wrap > a > div span { display: none; }   /* keep the brand one line */
+}
+
+/* ── hero ──────────────────────────────────────────────────────────────────── */
+.w-hero { padding-block: clamp(18px, 4vw, 44px) 8px; }
+.w-hero .w-halo { max-width: 92vw; max-height: 92vw; }
+.w-hero .w-grid { gap: clamp(18px, 3vw, 34px); }
+.w-hero .w-chip { max-width: 100%; }
+.w-hero .w-btn { min-height: 46px; }
+
+@media (max-width: 900px) {
+  .w-hero .w-grid { grid-template-columns: 1fr !important; }
+  .w-hero .w-card { order: 2; }
+}
+@media (max-width: 420px) {
+  .w-hero .w-row > .w-btn { flex: 1 1 100%; justify-content: center; }
+  .w-hero .w-wolf { width: 84px !important; }
+}
+
+/* ── grids / sections ──────────────────────────────────────────────────────── */
+.w-root section { scroll-margin-top: 78px; }        /* anchor offset under the sticky nav */
+.w-root .w-g-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.w-root .w-g-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.w-root .w-g-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+@media (max-width: 980px) {
+  .w-root .w-g-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .w-root .w-g-4, .w-root .w-g-3, .w-root .w-g-2 { grid-template-columns: 1fr; }
+  .w-root .w-wrap { padding-inline: 16px; }
+  .w-root .w-kpi { padding: 14px; }
+}
+
+/* ── marquees: never bleed past the viewport ───────────────────────────────── */
+.w-ticker, .w-casino-bar { max-width: 100%; contain: paint; }
+@media (max-width: 640px) {
+  .w-ticker-track { gap: 20px; animation-duration: 34s; }
+  .w-casino-track { animation-duration: 28s; }
+  .w-casino-tag { display: none; }
+  .w-casino-view { width: 100%; }
+}
+
+/* ── footer / plan cards ───────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .w-root .w-price { padding: 18px; }
+  .w-root footer .w-grid { grid-template-columns: 1fr !important; }
+}
+
+/* anchor navigation: smooth, but never for users who asked for less motion */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ── device guards ─────────────────────────────────────────────────────────── */
+.w-root .w-halo { max-height: 92vw; pointer-events: none; }
+.w-root img, .w-root svg { max-width: 100%; }
+.w-root .w-kpi-value, .w-root .w-num { font-variant-numeric: tabular-nums; }
+@media (max-width: 360px) {
+  .w-root { font-size: 15px; }
+  .w-root .w-h1 { font-size: clamp(26px, 8vw, 34px); }
+  .w-root .w-btn { padding-inline: 14px; }
+}
